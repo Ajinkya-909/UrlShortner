@@ -4,16 +4,24 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch index"
+    "dev": "node --watch index",
+    "db-push": "drizzle-kit push",
+    "db-studio": "drizzle-kit studio"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/node": "^25.4.0"
+    "@types/node": "^25.4.0",
+    "@types/pg": "^8.18.0",
+    "drizzle-kit": "^0.31.9",
+    "tsx": "^4.21.0"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.1",
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
   }
 }

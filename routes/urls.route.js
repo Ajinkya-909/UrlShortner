@@ -5,18 +5,18 @@ import {db} from '../db/index.js'
 import {urlsTable} from '../models/index.js'
 import {ensureAuthenticated} from '../middlewares/auth.middleware.js'
 import { eq } from 'drizzle-orm'
+import { log } from 'console'
 
 const router = express.Router();
 
-router.get('/:shortCode', async function (req,res) {
-  const code =req.params.shortCode;
-  const [result]= await db.select({
-    targetURL: urlsTable.targetURL
-  }).from(urlsTable).where(eq(urlsTable.shortCode,code))
+router.get('/codes',ensureAuthenticated,async function (req,res) {
+  const codes = await db.select().from(urlsTable).where(eq(urlsTable.userId,req.user.id))
 
-  if(!result) return res.status(400).json({error:`Url does not exist`})
+  if(!codes) return res.status(200).json({message:"No Urls Created"})
 
-  return res.redirect(result.targetURL)
+  console.log(codes);
+
+  return res.status(200).json({codes})
 
 })
 
@@ -49,5 +49,19 @@ router.post('/shorten',ensureAuthenticated,async function(req,res){
   })
 
 })
+
+
+router.get('/:shortCode', async function (req,res) {
+  const code =req.params.shortCode;
+  const [result]= await db.select({
+    targetURL: urlsTable.targetURL
+  }).from(urlsTable).where(eq(urlsTable.shortCode,code))
+
+  if(!result) return res.status(400).json({error:`Url does not exist`})
+
+  return res.redirect(result.targetURL)
+
+})
+
 
 export default router

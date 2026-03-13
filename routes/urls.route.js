@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 import {db} from '../db/index.js'
 import {urlsTable} from '../models/index.js'
 import {ensureAuthenticated} from '../middlewares/auth.middleware.js'
-import { eq } from 'drizzle-orm'
+import { eq,and } from 'drizzle-orm'
 import { log } from 'console'
 
 const router = express.Router();
@@ -50,6 +50,11 @@ router.post('/shorten',ensureAuthenticated,async function(req,res){
 
 })
 
+router.delete('/:id',ensureAuthenticated,async function (req,res){
+  const id=req.params.id;
+  const result =await db.delete(urlsTable).where(and(eq(urlsTable.id,id),eq(urlsTable.userId,req.user.id)))
+  return res.status(200).json({message:'Deleted the Url'})
+})
 
 router.get('/:shortCode', async function (req,res) {
   const code =req.params.shortCode;
@@ -62,6 +67,5 @@ router.get('/:shortCode', async function (req,res) {
   return res.redirect(result.targetURL)
 
 })
-
 
 export default router
